@@ -22,3 +22,27 @@ model User {
 
   @@map("users")
 }
+
+enum Size {
+  SMALL
+  MEDIUM
+  BIG
+}
+
+enum Locale {
+  SP
+  RJ
+  MG
+}
+
+model Pet {
+  id         String   @id @default(uuid())
+  name       String
+  race       String
+  size       Size
+  age        Int
+  locale     Locale
+  created_at DateTime @default(now())
+
+  @@map("pets")
+}
