@@ -13,7 +13,7 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRESQL_DATABASE: apisolidpg
+          POSTGRESQL_DATABASE: findfriendapi
           POSTGRESQL_USERNAME: postgresql
           POSTGRESQL_PASSWORD: postgresql
 
@@ -30,4 +30,4 @@ jobs:
       - run: npm run test:e2e
         env:
           JWT_SECRET: testing
-          DATABASE_URL: "postgresql://postgresql:postgresql@localhost:5432/apisolidpg?schema=public"
+          DATABASE_URL: "postgresql://postgresql:postgresql@localhost:5432/findfriendapi?schema=public"
