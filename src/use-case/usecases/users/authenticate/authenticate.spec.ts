@@ -7,7 +7,7 @@ import { AuthenticateUseCase } from './authenticate'
 import { UsersRepository } from '@/repositories/users-repository'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
-import { InvalidCredentialsError } from '../../errors/invalid-credentials-error'
+import { InvalidCredentialsError } from '../../../errors/invalid-credentials-error'
 
 describe('AUTHENTICATE USE CASE', () => {
 	let inMemoryUsersRepository: UsersRepository, sut: AuthenticateUseCase
