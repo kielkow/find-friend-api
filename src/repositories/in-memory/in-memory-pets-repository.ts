@@ -1,10 +1,27 @@
 import { randomUUID } from 'crypto'
 import { Pet, Prisma } from '@prisma/client'
 
-import { PetsRepository } from '../pets-repository'
+import { ListQuery, PetsRepository } from '../pets-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
 	public pets: Pet[] = []
+
+	async list(query: ListQuery) {
+		const fields = Object.keys(query)
+
+		const pets = this.pets.filter((pet) => {
+			for (const field of fields) {
+				const petField = pet[field as keyof ListQuery]
+				const queryField = query[field as keyof ListQuery]
+
+				if (petField !== queryField) return false
+			}
+
+			return pet
+		})
+
+		return pets
+	}
 
 	async create(data: Prisma.PetCreateInput) {
 		const { name, race, size, age, locale } = data
