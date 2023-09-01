@@ -5,7 +5,7 @@ import { RegisterUseCase } from './register'
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 
 describe('PETS - REGISTER USE CASE', () => {
-	let inMemoryPetsRepository, sut: RegisterUseCase
+	let inMemoryPetsRepository: InMemoryPetsRepository, sut: RegisterUseCase
 
 	beforeEach(() => {
 		inMemoryPetsRepository = new InMemoryPetsRepository()
