@@ -52,4 +52,21 @@ describe('PETS LIST CONTROLLER', () => {
 			expect.objectContaining({ name: 'Lucky' }),
 		])
 	})
+
+	it('should not be able to list pets without locale', async () => {
+		const { token } = await createAuthenticateUser(
+			app,
+			false,
+			'Jonh Doe Jr.',
+			'jonhdoejr@example.com',
+		)
+
+		const response = await request(app.server)
+			.get('/pets')
+			.set('Authorization', `Bearer ${token}`)
+			.query({})
+			.send()
+
+		expect(response.statusCode).toEqual(400)
+	})
 })
