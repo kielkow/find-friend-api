@@ -6,18 +6,20 @@ import { hash } from 'bcryptjs'
 export async function createAuthenticateUser(
 	app: FastifyInstance,
 	isAdmin = false,
+	name = 'John Doe',
+	email = 'jonhdoe@example.com',
 ) {
 	await prisma.user.create({
 		data: {
-			name: 'John Doe',
-			email: 'jonhdoe@example.com',
+			name,
+			email,
 			password_hash: await hash('123456', 7),
 			role: isAdmin ? 'ADMIN' : 'MEMBER',
 		},
 	})
 
 	const authResponse = await request(app.server).post('/sessions').send({
-		email: 'jonhdoe@example.com',
+		email,
 		password: '123456',
 	})
 
