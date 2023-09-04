@@ -6,7 +6,7 @@ export interface ListQuery {
 	race?: string
 	size?: Size
 	age?: number
-	locale?: Locale
+	locale: Locale
 }
 
 export interface PetsRepository {

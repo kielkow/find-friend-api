@@ -1,6 +1,7 @@
 import { Locale, Pet, Size } from '@prisma/client'
 
 import { PetsRepository } from '@/repositories/pets-repository'
+import { LocaleMustBeInformed } from '@/use-case/errors/locale-must-be-informed-error'
 
 interface ListPetsUseCaseRequest {
 	id?: string
@@ -8,7 +9,7 @@ interface ListPetsUseCaseRequest {
 	race?: string
 	size?: Size
 	age?: number
-	locale?: Locale
+	locale: Locale
 }
 
 interface ListPetsUseCaseResponse {
@@ -21,6 +22,10 @@ export class ListPetsUseCase {
 	async execute(
 		query: ListPetsUseCaseRequest,
 	): Promise<ListPetsUseCaseResponse> {
+		if (!query.locale) {
+			throw new LocaleMustBeInformed()
+		}
+
 		const pets = await this.petsRepository.list(query)
 
 		return { pets }
