@@ -29,7 +29,7 @@ describe('PETS - LIST PETS USE CASE', () => {
 			locale: 'MG',
 		})
 
-		const { pets } = await sut.execute({ locale: 'SP' })
+		const { pets } = await sut.execute({ locale: 'SP', page: 1 })
 
 		expect(pets).toHaveLength(1)
 		expect(pets).toEqual([expect.objectContaining({ name: 'Lucky' })])

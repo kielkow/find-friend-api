@@ -10,6 +10,7 @@ export async function list(request: FastifyRequest, reply: FastifyReply) {
 		size: z.enum(['SMALL', 'MEDIUM', 'BIG']).optional(),
 		age: z.coerce.number().nonnegative().optional(),
 		locale: z.enum(['SP', 'RJ', 'MG']),
+		page: z.coerce.number().min(1).default(1),
 	})
 
 	const query = listQuerySchema.parse(request.query)

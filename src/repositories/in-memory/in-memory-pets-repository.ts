@@ -1,24 +1,35 @@
 import { randomUUID } from 'crypto'
-import { Pet, Prisma } from '@prisma/client'
+import { Locale, Pet, Prisma, Size } from '@prisma/client'
 
 import { ListQuery, PetsRepository } from '../pets-repository'
+
+interface Query {
+	id?: string
+	name?: string
+	race?: string
+	size?: Size
+	age?: number
+	locale: Locale
+}
 
 export class InMemoryPetsRepository implements PetsRepository {
 	public pets: Pet[] = []
 
 	async list(query: ListQuery) {
-		const fields = Object.keys(query)
+		const fields = Object.keys(query).filter((key) => key !== 'page')
 
-		const pets = this.pets.filter((pet) => {
-			for (const field of fields) {
-				const petField = pet[field as keyof ListQuery]
-				const queryField = query[field as keyof ListQuery]
+		const pets = this.pets
+			.filter((pet) => {
+				for (const field of fields) {
+					const petField = pet[field as keyof Query]
+					const queryField = query[field as keyof Query]
 
-				if (petField !== queryField) return false
-			}
+					if (petField !== queryField) return false
+				}
 
-			return pet
-		})
+				return pet
+			})
+			.slice((query.page - 1) * 20, query.page * 20)
 
 		return pets
 	}

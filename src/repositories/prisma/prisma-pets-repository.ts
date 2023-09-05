@@ -9,6 +9,8 @@ export class PrismaPetsRepository implements PetsRepository {
 			where: {
 				...query,
 			},
+			take: 20,
+			skip: (query.page - 1) * 20,
 		})
 
 		return pets

@@ -7,6 +7,7 @@ export interface ListQuery {
 	size?: Size
 	age?: number
 	locale: Locale
+	page: number
 }
 
 export interface PetsRepository {

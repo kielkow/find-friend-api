@@ -10,6 +10,7 @@ interface ListPetsUseCaseRequest {
 	size?: Size
 	age?: number
 	locale: Locale
+	page: number
 }
 
 interface ListPetsUseCaseResponse {
