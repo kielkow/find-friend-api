@@ -5,9 +5,13 @@ import { ListQuery, PetsRepository } from '../pets-repository'
 
 export class PrismaPetsRepository implements PetsRepository {
 	async list(query: ListQuery) {
+		const filters = Object.entries(query)
+			.filter(([key, value]) => key !== 'page')
+			.reduce((res, [key, value]) => ({ ...res, [key]: value }), {})
+
 		const pets = await prisma.pet.findMany({
 			where: {
-				...query,
+				...filters,
 			},
 			take: 20,
 			skip: (query.page - 1) * 20,
