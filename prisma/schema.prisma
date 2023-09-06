@@ -12,17 +12,6 @@ enum Role {
   MEMBER
 }
 
-model User {
-  id            String   @id @default(uuid())
-  name          String
-  email         String   @unique
-  password_hash String
-  role          Role     @default(MEMBER)
-  created_at    DateTime @default(now())
-
-  @@map("users")
-}
-
 enum Size {
   SMALL
   MEDIUM
@@ -35,6 +24,17 @@ enum Locale {
   MG
 }
 
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  role          Role     @default(MEMBER)
+  created_at    DateTime @default(now())
+
+  @@map("users")
+}
+
 model Pet {
   id         String   @id @default(uuid())
   name       String
@@ -45,4 +45,18 @@ model Pet {
   created_at DateTime @default(now())
 
   @@map("pets")
+}
+
+model ORG {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  role          Role     @default(ADMIN)
+  address       String
+  phone         String
+  locale        Locale
+  created_at    DateTime @default(now())
+
+  @@map("orgs")
 }
