@@ -42,8 +42,8 @@ export class InMemoryPetsRepository implements PetsRepository {
 		return pet
 	}
 
-	async create(data: Prisma.PetCreateInput) {
-		const { name, race, size, age, locale } = data
+	async create(data: Prisma.PetUncheckedCreateInput) {
+		const { name, race, size, age, locale, org_id } = data
 
 		const pet = {
 			id: randomUUID(),
@@ -53,6 +53,7 @@ export class InMemoryPetsRepository implements PetsRepository {
 			age,
 			locale,
 			created_at: new Date(),
+			org_id,
 		}
 
 		this.pets.push(pet)

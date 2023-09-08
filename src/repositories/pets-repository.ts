@@ -13,5 +13,5 @@ export interface ListQuery {
 export interface PetsRepository {
 	list(query: ListQuery): Promise<Pet[]>
 	findById(id: string): Promise<Pet | null>
-	create(data: Prisma.PetCreateInput): Promise<Pet>
+	create(data: Prisma.PetUncheckedCreateInput): Promise<Pet>
 }
