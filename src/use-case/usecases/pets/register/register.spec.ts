@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { RegisterUseCase } from './register'
@@ -19,6 +21,7 @@ describe('PETS - REGISTER USE CASE', () => {
 			size: 'MEDIUM',
 			age: 1,
 			locale: 'SP',
+			org_id: randomUUID(),
 		})
 
 		expect(pet.id).toEqual(expect.any(String))
