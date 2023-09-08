@@ -8,6 +8,7 @@ interface RegisterUseCaseRequest {
 	size: Size
 	age: number
 	locale: Locale
+	org_id: string
 }
 
 interface RegisterUseCaseResponse {
@@ -23,6 +24,7 @@ export class RegisterUseCase {
 		size,
 		age,
 		locale,
+		org_id,
 	}: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
 		const pet = await this.petsRepository.create({
 			name,
@@ -30,6 +32,7 @@ export class RegisterUseCase {
 			size,
 			age,
 			locale,
+			org_id,
 		})
 
 		return { pet }
