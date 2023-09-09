@@ -3,6 +3,7 @@ import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { createAuthenticateUser } from '@/utils/test/create-authenticate-user'
+import { createOrg } from '@/utils/test/create-org'
 
 describe('PETS LIST CONTROLLER', () => {
 	beforeAll(async () => {
@@ -16,6 +17,8 @@ describe('PETS LIST CONTROLLER', () => {
 	it('should be able to list pets', async () => {
 		const { token } = await createAuthenticateUser(app)
 
+		const { org } = await createOrg(app)
+
 		await request(app.server)
 			.post('/pets')
 			.set('Authorization', `Bearer ${token}`)
@@ -25,6 +28,7 @@ describe('PETS LIST CONTROLLER', () => {
 				size: 'MEDIUM',
 				age: 1,
 				locale: 'SP',
+				org_id: org.id,
 			})
 
 		await request(app.server)
@@ -36,6 +40,7 @@ describe('PETS LIST CONTROLLER', () => {
 				size: 'MEDIUM',
 				age: 2,
 				locale: 'MG',
+				org_id: org.id,
 			})
 
 		const response = await request(app.server)

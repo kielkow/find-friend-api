@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { createAuthenticateUser } from '@/utils/test/create-authenticate-user'
+import { createOrg } from '@/utils/test/create-org'
 
 describe('PETS FIND BY ID CONTROLLER', () => {
 	beforeAll(async () => {
@@ -17,6 +18,8 @@ describe('PETS FIND BY ID CONTROLLER', () => {
 	it('should be able to find pet by ID', async () => {
 		const { token } = await createAuthenticateUser(app)
 
+		const { org } = await createOrg(app)
+
 		await request(app.server)
 			.post('/pets')
 			.set('Authorization', `Bearer ${token}`)
@@ -26,6 +29,7 @@ describe('PETS FIND BY ID CONTROLLER', () => {
 				size: 'MEDIUM',
 				age: 1,
 				locale: 'SP',
+				org_id: org.id,
 			})
 
 		const responseList = await request(app.server)
