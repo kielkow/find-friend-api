@@ -10,15 +10,16 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 		size: z.enum(['SMALL', 'MEDIUM', 'BIG']),
 		age: z.coerce.number().nonnegative(),
 		locale: z.enum(['SP', 'RJ', 'MG']),
+		org_id: z.string().uuid().nonempty(),
 	})
 
-	const { name, race, size, age, locale } = registerBodySchema.parse(
+	const { name, race, size, age, locale, org_id } = registerBodySchema.parse(
 		request.body,
 	)
 
 	const registerUseCase = makeRegisterUsecase()
 
-	await registerUseCase.execute({ name, race, size, age, locale })
+	await registerUseCase.execute({ name, race, size, age, locale, org_id })
 
 	return reply.status(201).send()
 }
