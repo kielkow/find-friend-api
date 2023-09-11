@@ -17,8 +17,27 @@ services:
       - postgresql-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d findfriendapi -U postgresql"]
-      interval: 3s
-      timeout: 3s
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  redis:
+    image: bitnami/redis
+    container_name: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+    networks:
+      - app-network
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/var/lib/redis/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli", "ping"]
+      interval: 15s
+      timeout: 5s
       retries: 3
     restart: unless-stopped
 
@@ -49,3 +68,4 @@ networks:
 
 volumes:
   postgresql-data:
+  redis-data:
