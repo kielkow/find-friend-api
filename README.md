@@ -9,7 +9,7 @@ Find a friend API.
 - [X] Deve ser possível filtrar pets por suas características;
 - [X] Deve ser possível visualizar detalhes de um pet para adoção;
 - [X] Deve ser possível se cadastrar como uma ORG;
-- [ ] Deve ser possível realizar login como uma ORG;
+- [X] Deve ser possível realizar login como uma ORG;
 
 ## RNs (Regras de negócio)
 
@@ -18,7 +18,7 @@ Find a friend API.
 - [X] Um pet deve estar ligado a uma ORG;
 - [X] O usuário que quer adotar, entrará em contato com a ORG via WhatsApp;
 - [X] Todos os filtros, além da cidade, são opcionais;
-- [ ] Para uma ORG acessar a aplicação como admin, ela precisa estar logada;
+- [X] Para uma ORG acessar a aplicação como admin, ela precisa estar logada;
 
 ## RNFs (Requisitos não-funcionais)
 
