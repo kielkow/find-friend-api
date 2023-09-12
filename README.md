@@ -29,3 +29,4 @@ Find a friend API.
 - [ ] Os dados de listagem devem ser salvos em cache, e só buscados no banco caso haja alguma alteração;
 - [ ] Todos os logs de erro da aplicação devem ser salvos no Sentry;
 - [ ] Deve ser possível consumir mensagens em uma fila para processar dados;
+- [ ] Desenvolver rota para healthcheck da aplicação e dos demais serviços;
