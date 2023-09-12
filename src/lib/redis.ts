@@ -1,13 +1,21 @@
 import { env } from '@/env'
 import { createClient } from 'redis'
 
-const client = createClient({ url: env.REDIS_URL })
+class RedisClient {
+	constructor() {}
 
-client.on('error', (error) => {
-	console.log(error)
-	throw new Error('Fail to connect with Redis.')
-})
+	async connect() {
+		const client = createClient({ url: env.REDIS_URL })
 
-client.on('connect', () => {})
+		client.on('error', (error) => {
+			console.log(error)
+			throw new Error('Fail to connect with Redis.')
+		})
 
-export const redis = client
+		await client.connect()
+
+		return client
+	}
+}
+
+export const redis = new RedisClient()
