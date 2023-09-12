@@ -1,3 +1,4 @@
+import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
@@ -16,6 +17,11 @@ export class PrismaUsersRepository implements UsersRepository {
 
 	async create(data: Prisma.UserCreateInput) {
 		const user = await prisma.user.create({ data })
+
+		const client = await redis.connect()
+		await client.set(`user-${user.id}`, JSON.stringify(user))
+		await client.disconnect()
+
 		return user
 	}
 }
