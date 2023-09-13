@@ -1,3 +1,4 @@
+import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
@@ -16,6 +17,11 @@ export class PrismaOrgsRepository implements OrgsRepository {
 
 	async create(data: Prisma.ORGCreateInput) {
 		const org = await prisma.oRG.create({ data })
+
+		const client = await redis.connect()
+		await client.set(`org-${org.id}`, JSON.stringify(org))
+		await client.disconnect()
+
 		return org
 	}
 }

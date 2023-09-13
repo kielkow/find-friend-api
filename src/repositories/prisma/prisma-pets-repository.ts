@@ -1,3 +1,4 @@
+import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
@@ -32,6 +33,11 @@ export class PrismaPetsRepository implements PetsRepository {
 
 	async create(data: Prisma.PetUncheckedCreateInput) {
 		const pet = await prisma.pet.create({ data })
+
+		const client = await redis.connect()
+		await client.set(`pet-${pet.id}`, JSON.stringify(pet))
+		await client.disconnect()
+
 		return pet
 	}
 }
