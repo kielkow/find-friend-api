@@ -10,6 +10,7 @@ Find a friend API.
 - [X] Deve ser possível visualizar detalhes de um pet para adoção;
 - [X] Deve ser possível se cadastrar como uma ORG;
 - [X] Deve ser possível realizar login como uma ORG;
+- [ ] Deve ser possível editar um usuário, pet e org;
 
 ## RNs (Regras de negócio)
 
