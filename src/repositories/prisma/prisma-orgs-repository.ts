@@ -19,7 +19,15 @@ export class PrismaOrgsRepository implements OrgsRepository {
 	}
 
 	async findByEmail(email: string) {
-		const org = await prisma.oRG.findUnique({ where: { email } })
+		let org
+
+		const clientRedis = await redis.connect()
+		org = await clientRedis.get(`org-${email}`)
+		await clientRedis.disconnect()
+
+		if (org) org = JSON.parse(org)
+		else org = await prisma.oRG.findUnique({ where: { email } })
+
 		return org
 	}
 
@@ -28,6 +36,7 @@ export class PrismaOrgsRepository implements OrgsRepository {
 
 		const clientRedis = await redis.connect()
 		await clientRedis.set(`org-${org.id}`, JSON.stringify(org))
+		await clientRedis.set(`org-${org.email}`, JSON.stringify(org))
 		await clientRedis.disconnect()
 
 		return org

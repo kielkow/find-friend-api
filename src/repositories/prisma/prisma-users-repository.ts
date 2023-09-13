@@ -19,7 +19,15 @@ export class PrismaUsersRepository implements UsersRepository {
 	}
 
 	async findByEmail(email: string) {
-		const user = await prisma.user.findUnique({ where: { email } })
+		let user
+
+		const clientRedis = await redis.connect()
+		user = await clientRedis.get(`user-${email}`)
+		await clientRedis.disconnect()
+
+		if (user) user = JSON.parse(user)
+		else user = await prisma.user.findUnique({ where: { email } })
+
 		return user
 	}
 
@@ -28,6 +36,7 @@ export class PrismaUsersRepository implements UsersRepository {
 
 		const clientRedis = await redis.connect()
 		await clientRedis.set(`user-${user.id}`, JSON.stringify(user))
+		await clientRedis.set(`user-${user.email}`, JSON.stringify(user))
 		await clientRedis.disconnect()
 
 		return user
