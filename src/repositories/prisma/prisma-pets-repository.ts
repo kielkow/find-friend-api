@@ -22,11 +22,14 @@ export class PrismaPetsRepository implements PetsRepository {
 	}
 
 	async findById(id: string) {
-		const pet = await prisma.pet.findUnique({
-			where: {
-				id,
-			},
-		})
+		let pet
+
+		const clientRedis = await redis.connect()
+		pet = await clientRedis.get(`pet-${id}`)
+		await clientRedis.disconnect()
+
+		if (pet) pet = JSON.parse(pet)
+		else pet = await prisma.pet.findUnique({ where: { id } })
 
 		return pet
 	}
@@ -34,9 +37,9 @@ export class PrismaPetsRepository implements PetsRepository {
 	async create(data: Prisma.PetUncheckedCreateInput) {
 		const pet = await prisma.pet.create({ data })
 
-		const client = await redis.connect()
-		await client.set(`pet-${pet.id}`, JSON.stringify(pet))
-		await client.disconnect()
+		const clientRedis = await redis.connect()
+		await clientRedis.set(`pet-${pet.id}`, JSON.stringify(pet))
+		await clientRedis.disconnect()
 
 		return pet
 	}

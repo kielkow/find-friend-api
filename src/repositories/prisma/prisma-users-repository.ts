@@ -6,7 +6,15 @@ import { UsersRepository } from '../users-repository'
 
 export class PrismaUsersRepository implements UsersRepository {
 	async findById(id: string) {
-		const user = await prisma.user.findUnique({ where: { id } })
+		let user
+
+		const clientRedis = await redis.connect()
+		user = await clientRedis.get(`user-${id}`)
+		await clientRedis.disconnect()
+
+		if (user) user = JSON.parse(user)
+		else user = await prisma.user.findUnique({ where: { id } })
+
 		return user
 	}
 
@@ -18,9 +26,9 @@ export class PrismaUsersRepository implements UsersRepository {
 	async create(data: Prisma.UserCreateInput) {
 		const user = await prisma.user.create({ data })
 
-		const client = await redis.connect()
-		await client.set(`user-${user.id}`, JSON.stringify(user))
-		await client.disconnect()
+		const clientRedis = await redis.connect()
+		await clientRedis.set(`user-${user.id}`, JSON.stringify(user))
+		await clientRedis.disconnect()
 
 		return user
 	}

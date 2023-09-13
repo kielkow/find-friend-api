@@ -6,7 +6,15 @@ import { OrgsRepository } from '../orgs-repository'
 
 export class PrismaOrgsRepository implements OrgsRepository {
 	async findById(id: string) {
-		const org = await prisma.oRG.findUnique({ where: { id } })
+		let org
+
+		const clientRedis = await redis.connect()
+		org = await clientRedis.get(`org-${id}`)
+		await clientRedis.disconnect()
+
+		if (org) org = JSON.parse(org)
+		else org = await prisma.oRG.findUnique({ where: { id } })
+
 		return org
 	}
 
@@ -18,9 +26,9 @@ export class PrismaOrgsRepository implements OrgsRepository {
 	async create(data: Prisma.ORGCreateInput) {
 		const org = await prisma.oRG.create({ data })
 
-		const client = await redis.connect()
-		await client.set(`org-${org.id}`, JSON.stringify(org))
-		await client.disconnect()
+		const clientRedis = await redis.connect()
+		await clientRedis.set(`org-${org.id}`, JSON.stringify(org))
+		await clientRedis.disconnect()
 
 		return org
 	}
