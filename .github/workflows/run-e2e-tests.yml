@@ -17,6 +17,13 @@ jobs:
           POSTGRESQL_USERNAME: postgresql
           POSTGRESQL_PASSWORD: postgresql
 
+      redis:
+        image: bitnami/redis
+        ports:
+          - 6379:6379
+        env:
+          REDIS_PASSWORD: redis
+
     steps:
       - uses: actions/checkout@v3
 
@@ -28,6 +35,8 @@ jobs:
       - run: npm ci
 
       - run: npm run test:e2e
+
         env:
           JWT_SECRET: testing
           DATABASE_URL: "postgresql://postgresql:postgresql@localhost:5432/findfriendapi?schema=public"
+          REDIS_URL: "redis://:redis@localhost:6379/0"
