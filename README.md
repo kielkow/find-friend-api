@@ -27,7 +27,8 @@ Find a friend API.
 - [X] Os dados da aplicação precisam estar persistidos em um banco PostgreSQL;
 - [X] Todas listas de dados precisam estar paginadas com 20 itens por página;
 - [X] O usuário deve ser identificado por um JWT (JSON Web Token);
-- [ ] Os dados de listagem devem ser salvos em cache, e só buscados no banco caso haja alguma alteração;
+- [X] Os dados de listagem devem ser salvos em cache, e só buscados no banco caso haja alguma alteração;
 - [ ] Todos os logs de erro da aplicação devem ser salvos no Sentry;
 - [ ] Deve ser possível consumir mensagens em uma fila para processar dados;
 - [ ] Desenvolver rota para healthcheck da aplicação e dos demais serviços;
+- [ ] Mock de cache para testes;
