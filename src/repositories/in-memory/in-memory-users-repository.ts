@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import { Prisma, Role, User } from '@prisma/client'
 
-import { UsersRepository } from '../users-repository'
+import { UserUpdate, UsersRepository } from '../users-repository'
 
 export class InMemoryUsersRepository implements UsersRepository {
 	public users: User[] = []
@@ -35,6 +35,18 @@ export class InMemoryUsersRepository implements UsersRepository {
 		}
 
 		this.users.push(user)
+
+		return user
+	}
+
+	async update(data: UserUpdate) {
+		const { id, name, email, password_hash } = data
+
+		let user = this.users.find((user) => user.id === id)
+
+		if (!user) return null
+
+		user = { ...user, name, email, password_hash }
 
 		return user
 	}
