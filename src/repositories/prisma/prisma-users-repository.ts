@@ -2,7 +2,7 @@ import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
-import { UsersRepository } from '../users-repository'
+import { UserUpdate, UsersRepository } from '../users-repository'
 
 export class PrismaUsersRepository implements UsersRepository {
 	async findById(id: string) {
@@ -37,6 +37,22 @@ export class PrismaUsersRepository implements UsersRepository {
 		const clientRedis = await redis.connect()
 		await clientRedis.set(`user-${user.id}`, JSON.stringify(user))
 		await clientRedis.set(`user-${user.email}`, JSON.stringify(user))
+		await clientRedis.disconnect()
+
+		return user
+	}
+
+	async update(data: UserUpdate) {
+		const { id, name, email, password_hash } = data
+
+		const user = await prisma.user.update({
+			where: { id },
+			data: { name, email, password_hash },
+		})
+
+		const clientRedis = await redis.connect()
+		await clientRedis.set(`user-${user.id}`, '')
+		await clientRedis.set(`user-${user.email}`, '')
 		await clientRedis.disconnect()
 
 		return user
