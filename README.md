@@ -10,7 +10,9 @@ Find a friend API.
 - [X] Deve ser possível visualizar detalhes de um pet para adoção;
 - [X] Deve ser possível se cadastrar como uma ORG;
 - [X] Deve ser possível realizar login como uma ORG;
-- [ ] Deve ser possível editar um usuário, pet e org;
+- [X] Deve ser possível editar um usuário;
+- [ ] Deve ser possível editar um pet;
+- [ ] Deve ser possível editar uma org;
 
 ## RNs (Regras de negócio)
 
@@ -28,7 +30,7 @@ Find a friend API.
 - [X] Todas listas de dados precisam estar paginadas com 20 itens por página;
 - [X] O usuário deve ser identificado por um JWT (JSON Web Token);
 - [X] Os dados de listagem devem ser salvos em cache, e só buscados no banco caso haja alguma alteração;
+- [X] Desenvolver rota para healthcheck da aplicação e dos demais serviços;
 - [ ] Todos os logs de erro da aplicação devem ser salvos no Sentry;
 - [ ] Deve ser possível consumir mensagens em uma fila para processar dados;
-- [X] Desenvolver rota para healthcheck da aplicação e dos demais serviços;
 - [ ] Mock de cache para testes;
