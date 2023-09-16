@@ -2,7 +2,7 @@ import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
-import { ListQuery, PetsRepository } from '../pets-repository'
+import { ListQuery, PetUpdate, PetsRepository } from '../pets-repository'
 
 export class PrismaPetsRepository implements PetsRepository {
 	async list(query: ListQuery) {
@@ -39,6 +39,21 @@ export class PrismaPetsRepository implements PetsRepository {
 
 		const clientRedis = await redis.connect()
 		await clientRedis.set(`pet-${pet.id}`, JSON.stringify(pet))
+		await clientRedis.disconnect()
+
+		return pet
+	}
+
+	async update(data: PetUpdate) {
+		const { id, name, race, size, age, locale, org_id } = data
+
+		const pet = await prisma.pet.update({
+			where: { id },
+			data: { name, race, size, age, locale, org_id },
+		})
+
+		const clientRedis = await redis.connect()
+		await clientRedis.set(`pet-${pet.id}`, '')
 		await clientRedis.disconnect()
 
 		return pet

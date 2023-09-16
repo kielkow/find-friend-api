@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import { Locale, Pet, Prisma, Size } from '@prisma/client'
 
-import { ListQuery, PetsRepository } from '../pets-repository'
+import { ListQuery, PetUpdate, PetsRepository } from '../pets-repository'
 
 interface Query {
 	id?: string
@@ -57,6 +57,18 @@ export class InMemoryPetsRepository implements PetsRepository {
 		}
 
 		this.pets.push(pet)
+
+		return pet
+	}
+
+	async update(data: PetUpdate) {
+		const { id, name, race, size, age, locale, org_id } = data
+
+		let pet = this.pets.find((pet) => pet.id === id)
+
+		if (!pet) return null
+
+		pet = { ...pet, name, race, size, age, locale, org_id }
 
 		return pet
 	}
