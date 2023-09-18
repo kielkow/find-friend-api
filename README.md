@@ -11,7 +11,7 @@ Find a friend API.
 - [X] Deve ser possível se cadastrar como uma ORG;
 - [X] Deve ser possível realizar login como uma ORG;
 - [X] Deve ser possível editar um usuário;
-- [ ] Deve ser possível editar um pet;
+- [X] Deve ser possível editar um pet;
 - [ ] Deve ser possível editar uma org;
 
 ## RNs (Regras de negócio)
