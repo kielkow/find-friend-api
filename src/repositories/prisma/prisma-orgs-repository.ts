@@ -2,7 +2,7 @@ import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 
-import { OrgsRepository } from '../orgs-repository'
+import { OrgUpdate, OrgsRepository } from '../orgs-repository'
 
 export class PrismaOrgsRepository implements OrgsRepository {
 	async findById(id: string) {
@@ -37,6 +37,23 @@ export class PrismaOrgsRepository implements OrgsRepository {
 		const clientRedis = await redis.connect()
 		await clientRedis.set(`org-${org.id}`, JSON.stringify(org))
 		await clientRedis.set(`org-${org.email}`, JSON.stringify(org))
+		await clientRedis.disconnect()
+
+		return org
+	}
+
+	async update(data: OrgUpdate) {
+		const { id, name, email, password_hash, address, locale, phone, role } =
+			data
+
+		const org = await prisma.oRG.update({
+			where: { id },
+			data: { name, email, password_hash, address, locale, phone, role },
+		})
+
+		const clientRedis = await redis.connect()
+		await clientRedis.set(`org-${org.id}`, '')
+		await clientRedis.set(`org-${org.email}`, '')
 		await clientRedis.disconnect()
 
 		return org

@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto'
 import { Prisma, Role, ORG } from '@prisma/client'
 
-import { OrgsRepository } from '../orgs-repository'
+import { OrgUpdate, OrgsRepository } from '../orgs-repository'
 
 export class InMemoryOrgsRepository implements OrgsRepository {
 	public orgs: ORG[] = []
@@ -38,6 +38,19 @@ export class InMemoryOrgsRepository implements OrgsRepository {
 		}
 
 		this.orgs.push(org)
+
+		return org
+	}
+
+	async update(data: OrgUpdate) {
+		const { id, name, email, password_hash, address, locale, phone, role } =
+			data
+
+		let org = this.orgs.find((org) => org.id === id)
+
+		if (!org) return null
+
+		org = { ...org, name, email, password_hash, address, locale, phone, role }
 
 		return org
 	}
