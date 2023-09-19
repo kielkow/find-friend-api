@@ -6,5 +6,6 @@ export default defineConfig({
 	test: {
 		exclude: [...configDefaults.exclude, 'build'],
 		environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
+		setupFiles: ['./vitest.setup.redis-mock.ts'],
 	},
 })

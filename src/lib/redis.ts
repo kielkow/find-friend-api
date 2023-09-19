@@ -1,10 +1,17 @@
 import { env } from '@/env'
 import { createClient } from 'redis'
+import redisMock from 'redis-mock'
 
 class RedisClient {
 	constructor() {}
 
 	async connect() {
+		if (process.env.NODE_ENV === 'test') {
+			const client = redisMock.createClient()
+			client.disconnect = () => console.log('redis-mock disconnecting...')
+			return client
+		}
+
 		const client = createClient({ url: env.REDIS_URL })
 
 		client.on('error', (error) => {
