@@ -7,12 +7,12 @@ import { ResourceNotFoundError } from '@/use-case/errors/resource-not-found-erro
 export async function update(request: FastifyRequest, reply: FastifyReply) {
 	const updateParamsSchema = z.object({ id: z.string().uuid() })
 	const updateBodySchema = z.object({
-		name: z.string(),
-		race: z.string(),
-		size: z.enum(['SMALL', 'MEDIUM', 'BIG']),
-		age: z.coerce.number().int(),
-		locale: z.enum(['SP', 'RJ', 'MG']),
-		org_id: z.string(),
+		name: z.string().optional(),
+		race: z.string().optional(),
+		size: z.enum(['SMALL', 'MEDIUM', 'BIG']).optional(),
+		age: z.coerce.number().int().optional(),
+		locale: z.enum(['SP', 'RJ', 'MG']).optional(),
+		org_id: z.string().optional(),
 	})
 
 	const { id } = updateParamsSchema.parse(request.params)

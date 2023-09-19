@@ -8,9 +8,9 @@ import { ResourceNotFoundError } from '@/use-case/errors/resource-not-found-erro
 export async function update(request: FastifyRequest, reply: FastifyReply) {
 	const updateParamsSchema = z.object({ id: z.string().uuid() })
 	const updateBodySchema = z.object({
-		name: z.string(),
-		email: z.string().email(),
-		password: z.string().min(6),
+		name: z.string().optional(),
+		email: z.string().email().optional(),
+		password: z.string().min(6).optional(),
 	})
 
 	const { id } = updateParamsSchema.parse(request.params)
