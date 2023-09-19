@@ -4,6 +4,7 @@ import { Locale, ORG, Role } from '@prisma/client'
 import { OrgsRepository } from '@/repositories/orgs-repository'
 
 import { ResourceNotFoundError } from '@/use-case/errors/resource-not-found-error'
+import { OrgAlreadyExistsError } from '@/use-case/errors/org-already-exists-error'
 
 interface UpdateUseCaseRequest {
 	id: string
@@ -35,6 +36,14 @@ export class UpdateUseCase {
 	}: UpdateUseCaseRequest): Promise<UpdateUseCaseResponse> {
 		const orgExists = await this.orgsRepository.findById(id)
 		if (!orgExists) throw new ResourceNotFoundError()
+
+		if (email) {
+			const orgEmailExists = await this.orgsRepository.findByEmail(email)
+
+			if (orgEmailExists && orgEmailExists.id !== id) {
+				throw new OrgAlreadyExistsError()
+			}
+		}
 
 		const password_hash = password
 			? await hash(password, 6)
