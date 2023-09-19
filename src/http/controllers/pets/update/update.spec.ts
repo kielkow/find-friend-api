@@ -60,7 +60,7 @@ describe('PET UPDATE CONTROLLER', () => {
 				name: 'Lucky Jr.',
 				race: 'Border Collie Small',
 				size: 'SMALL',
-				age: 1.5,
+				age: 2,
 				locale: 'MG',
 				org_id: update_org.id,
 			})
