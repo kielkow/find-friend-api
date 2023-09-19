@@ -31,6 +31,6 @@ Find a friend API.
 - [X] O usuário deve ser identificado por um JWT (JSON Web Token);
 - [X] Os dados de listagem devem ser salvos em cache, e só buscados no banco caso haja alguma alteração;
 - [X] Desenvolver rota para healthcheck da aplicação e dos demais serviços;
+- [X] Mock de cache para testes;
 - [ ] Todos os logs de erro da aplicação devem ser salvos no Sentry;
 - [ ] Deve ser possível consumir mensagens em uma fila para processar dados;
-- [ ] Mock de cache para testes;
