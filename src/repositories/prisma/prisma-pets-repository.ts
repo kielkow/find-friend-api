@@ -28,7 +28,7 @@ export class PrismaPetsRepository implements PetsRepository {
 		pet = await clientRedis.get(`pet-${id}`)
 		await clientRedis.disconnect()
 
-		if (pet) pet = JSON.parse(pet)
+		if (pet) pet = JSON.parse(pet.toString())
 		else pet = await prisma.pet.findUnique({ where: { id } })
 
 		return pet

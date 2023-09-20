@@ -12,7 +12,7 @@ export class PrismaOrgsRepository implements OrgsRepository {
 		org = await clientRedis.get(`org-${id}`)
 		await clientRedis.disconnect()
 
-		if (org) org = JSON.parse(org)
+		if (org) org = JSON.parse(org.toString())
 		else org = await prisma.oRG.findUnique({ where: { id } })
 
 		return org
@@ -25,7 +25,7 @@ export class PrismaOrgsRepository implements OrgsRepository {
 		org = await clientRedis.get(`org-${email}`)
 		await clientRedis.disconnect()
 
-		if (org) org = JSON.parse(org)
+		if (org) org = JSON.parse(org.toString())
 		else org = await prisma.oRG.findUnique({ where: { email } })
 
 		return org

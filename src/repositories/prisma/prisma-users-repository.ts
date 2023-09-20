@@ -12,7 +12,7 @@ export class PrismaUsersRepository implements UsersRepository {
 		user = await clientRedis.get(`user-${id}`)
 		await clientRedis.disconnect()
 
-		if (user) user = JSON.parse(user)
+		if (user) user = JSON.parse(user.toString())
 		else user = await prisma.user.findUnique({ where: { id } })
 
 		return user
@@ -25,7 +25,7 @@ export class PrismaUsersRepository implements UsersRepository {
 		user = await clientRedis.get(`user-${email}`)
 		await clientRedis.disconnect()
 
-		if (user) user = JSON.parse(user)
+		if (user) user = JSON.parse(user.toString())
 		else user = await prisma.user.findUnique({ where: { email } })
 
 		return user
