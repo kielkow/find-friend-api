@@ -22,8 +22,6 @@ function generateDatabaseURL(schema: string) {
 export default <Environment>{
 	name: 'prisma',
 	async setup() {
-		console.log('prisma-test-environment executing...')
-
 		const schema = randomUUID()
 
 		const databaseURL = generateDatabaseURL(schema)
@@ -39,8 +37,6 @@ export default <Environment>{
 				)
 
 				await prisma.$disconnect()
-
-				console.log('prisma-test-environment finalizing...')
 			},
 		}
 	},

@@ -8,7 +8,7 @@ class RedisClient {
 	async connect() {
 		if (process.env.NODE_ENV === 'test') {
 			const client = redisMock.createClient()
-			client.disconnect = () => console.log('redis-mock disconnecting...')
+			client.disconnect = () => client.quit()
 			return client
 		}
 
