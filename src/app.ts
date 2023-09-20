@@ -3,6 +3,8 @@ import { ZodError } from 'zod'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 import fastifyCors from '@fastify/cors'
+import * as Sentry from '@sentry/node'
+import { ProfilingIntegration } from '@sentry/profiling-node'
 
 import { env } from './env'
 
@@ -36,6 +38,13 @@ app.register(petsRoutes)
 app.register(orgsRoutes)
 app.register(healthcheckRoutes)
 
+Sentry.init({
+	dsn: env.SENTRY_DSN_URL,
+	integrations: [new ProfilingIntegration()],
+	tracesSampleRate: 1.0,
+	profilesSampleRate: 1.0,
+})
+
 app.setErrorHandler((error, _, reply) => {
 	if (error instanceof ZodError) {
 		return reply
@@ -46,7 +55,14 @@ app.setErrorHandler((error, _, reply) => {
 	if (env.NODE_ENV !== 'prod') {
 		console.error(error)
 	} else {
-		// TODO: Log to an external tool like Sentry/NewRelic/DataDog
+		const transaction = Sentry.startTransaction({
+			op: 'ERROR-API',
+			name: 'INTERNAL-SERVER-ERROR',
+		})
+
+		Sentry.captureException(error)
+
+		transaction.finish()
 	}
 
 	return reply.status(500).send({ message: 'Internal server error' })

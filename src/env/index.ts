@@ -20,6 +20,8 @@ const envSchema = z.object({
 
 	REDIS_PASSWORD: z.string().default('redis'),
 	REDIS_URL: z.string().default('redis://redis:redis@redis:6379/findfriendapi'),
+
+	SENTRY_DSN_URL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)
