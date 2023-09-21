@@ -22,7 +22,7 @@ const envSchema = z.object({
 
 	RABBITMQ_USERNAME: z.string().default('user'),
 	RABBITMQ_PASSWORD: z.string().default('bitnami'),
-	RABBIT_URL: z.string().default('rabbitmq://user:bitnami@rabbitmq:5672'),
+	RABBIT_URL: z.string().default('amqp://user:bitnami@rabbitmq:5672'),
 
 	SENTRY_DSN_URL: z
 		.string()
