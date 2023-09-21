@@ -21,6 +21,8 @@ const envSchema = z.object({
 	REDIS_PASSWORD: z.string().default('redis'),
 	REDIS_URL: z.string().default('redis://redis:redis@redis:6379/findfriendapi'),
 
+	RABBIT_URL: z.string().default(''),
+
 	SENTRY_DSN_URL: z
 		.string()
 		.default('https://{dsn_first_id}.ingest.sentry.io/{dsn_second_id}'),
