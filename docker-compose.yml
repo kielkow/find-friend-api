@@ -41,6 +41,27 @@ services:
       retries: 3
     restart: unless-stopped
 
+  rabbitmq:
+    image: bitnami/rabbitmq
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - app-network
+    environment:
+      - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/data
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmqctl", "cluster_status"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
   find-friend-api:
     build:
       context: .
@@ -69,3 +90,4 @@ networks:
 volumes:
   postgresql-data:
   redis-data:
+  rabbitmq-data:

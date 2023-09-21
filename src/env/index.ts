@@ -11,7 +11,6 @@ const envSchema = z.object({
 	POSTGRESQL_DATABASE: z.string().default('findfriendapi'),
 	POSTGRESQL_USERNAME: z.string().default('postgresql'),
 	POSTGRESQL_PASSWORD: z.string().default('postgresql'),
-
 	DATABASE_URL: z
 		.string()
 		.default(
@@ -21,7 +20,9 @@ const envSchema = z.object({
 	REDIS_PASSWORD: z.string().default('redis'),
 	REDIS_URL: z.string().default('redis://redis:redis@redis:6379/findfriendapi'),
 
-	RABBIT_URL: z.string().default(''),
+	RABBITMQ_USERNAME: z.string().default('user'),
+	RABBITMQ_PASSWORD: z.string().default('bitnami'),
+	RABBIT_URL: z.string().default('rabbitmq://user:bitnami@rabbitmq:5672'),
 
 	SENTRY_DSN_URL: z
 		.string()
