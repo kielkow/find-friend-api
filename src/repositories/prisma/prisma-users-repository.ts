@@ -5,6 +5,7 @@ import { cacheProvider } from '@/lib/cache'
 import { UserUpdate, UsersRepository } from '../users-repository'
 
 export class PrismaUsersRepository implements UsersRepository {
+	// TODO: If user does not exists at cache, set it.
 	async findById(id: string) {
 		let user
 
@@ -16,6 +17,7 @@ export class PrismaUsersRepository implements UsersRepository {
 		return user
 	}
 
+	// TODO: If user does not exists at cache, set it.
 	async findByEmail(email: string) {
 		let user
 

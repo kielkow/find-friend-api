@@ -21,6 +21,7 @@ export class PrismaPetsRepository implements PetsRepository {
 		return pets
 	}
 
+	// TODO: If pet does not exists at cache, set it.
 	async findById(id: string) {
 		let pet
 

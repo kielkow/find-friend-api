@@ -5,6 +5,7 @@ import { cacheProvider } from '@/lib/cache'
 import { OrgUpdate, OrgsRepository } from '../orgs-repository'
 
 export class PrismaOrgsRepository implements OrgsRepository {
+	// TODO: If org does not exists at cache, set it.
 	async findById(id: string) {
 		let org
 
@@ -16,6 +17,7 @@ export class PrismaOrgsRepository implements OrgsRepository {
 		return org
 	}
 
+	// TODO: If org does not exists at cache, set it.
 	async findByEmail(email: string) {
 		let org
 
