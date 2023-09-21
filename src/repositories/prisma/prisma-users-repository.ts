@@ -1,6 +1,6 @@
-import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import { cacheProvider } from '@/lib/cache'
 
 import { UserUpdate, UsersRepository } from '../users-repository'
 
@@ -8,9 +8,7 @@ export class PrismaUsersRepository implements UsersRepository {
 	async findById(id: string) {
 		let user
 
-		const clientRedis = await redis.connect()
-		user = await clientRedis.get(`user-${id}`)
-		await clientRedis.disconnect()
+		user = await cacheProvider.get(`user-${id}`)
 
 		if (user) user = JSON.parse(user.toString())
 		else user = await prisma.user.findUnique({ where: { id } })
@@ -21,9 +19,7 @@ export class PrismaUsersRepository implements UsersRepository {
 	async findByEmail(email: string) {
 		let user
 
-		const clientRedis = await redis.connect()
-		user = await clientRedis.get(`user-${email}`)
-		await clientRedis.disconnect()
+		user = await cacheProvider.get(`user-${email}`)
 
 		if (user) user = JSON.parse(user.toString())
 		else user = await prisma.user.findUnique({ where: { email } })
@@ -34,10 +30,8 @@ export class PrismaUsersRepository implements UsersRepository {
 	async create(data: Prisma.UserCreateInput) {
 		const user = await prisma.user.create({ data })
 
-		const clientRedis = await redis.connect()
-		await clientRedis.set(`user-${user.id}`, JSON.stringify(user))
-		await clientRedis.set(`user-${user.email}`, JSON.stringify(user))
-		await clientRedis.disconnect()
+		await cacheProvider.set(`user-${user.id}`, JSON.stringify(user))
+		await cacheProvider.set(`user-${user.email}`, JSON.stringify(user))
 
 		return user
 	}
@@ -50,10 +44,8 @@ export class PrismaUsersRepository implements UsersRepository {
 			data: { name, email, password_hash },
 		})
 
-		const clientRedis = await redis.connect()
-		await clientRedis.set(`user-${user.id}`, '')
-		await clientRedis.set(`user-${user.email}`, '')
-		await clientRedis.disconnect()
+		await cacheProvider.set(`user-${user.id}`, '')
+		await cacheProvider.set(`user-${user.email}`, '')
 
 		return user
 	}

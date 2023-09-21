@@ -1,8 +1,8 @@
 import { env } from '@/env'
-import { createClient } from 'redis'
 import redisMock from 'redis-mock'
+import { createClient } from 'redis'
 
-class RedisClient {
+class CacheProvider {
 	constructor() {}
 
 	async connect() {
@@ -22,6 +22,19 @@ class RedisClient {
 		await client.connect()
 
 		return client
+	}
+
+	async set(key: string, value: string) {
+		const client = await this.connect()
+		await client.set(key, value)
+		await client.disconnect()
+	}
+
+	async get(key: string) {
+		const client = await this.connect()
+		const value = await client.get(key)
+		await client.disconnect()
+		return value
 	}
 
 	async testConn() {
@@ -54,4 +67,4 @@ class RedisClient {
 	}
 }
 
-export const redis = new RedisClient()
+export const cacheProvider = new CacheProvider()

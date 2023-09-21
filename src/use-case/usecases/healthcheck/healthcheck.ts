@@ -1,5 +1,5 @@
-import { redis } from '@/lib/redis'
 import { rabbitmq } from '@/lib/rabbitmq'
+import { cacheProvider } from '@/lib/cache'
 import { testConn as prismaTestConn } from '@/lib/prisma'
 
 interface HealthcheckUseCaseResponse {
@@ -11,8 +11,8 @@ export class HealthcheckUseCase {
 
 	async execute(): Promise<HealthcheckUseCaseResponse> {
 		await prismaTestConn()
-		await redis.testConn()
 		await rabbitmq.testConn()
+		await cacheProvider.testConn()
 
 		return { message: 'Server is up.' }
 	}

@@ -1,6 +1,6 @@
-import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import { cacheProvider } from '@/lib/cache'
 
 import { OrgUpdate, OrgsRepository } from '../orgs-repository'
 
@@ -8,9 +8,7 @@ export class PrismaOrgsRepository implements OrgsRepository {
 	async findById(id: string) {
 		let org
 
-		const clientRedis = await redis.connect()
-		org = await clientRedis.get(`org-${id}`)
-		await clientRedis.disconnect()
+		org = await cacheProvider.get(`org-${id}`)
 
 		if (org) org = JSON.parse(org.toString())
 		else org = await prisma.oRG.findUnique({ where: { id } })
@@ -21,9 +19,7 @@ export class PrismaOrgsRepository implements OrgsRepository {
 	async findByEmail(email: string) {
 		let org
 
-		const clientRedis = await redis.connect()
-		org = await clientRedis.get(`org-${email}`)
-		await clientRedis.disconnect()
+		org = await cacheProvider.get(`org-${email}`)
 
 		if (org) org = JSON.parse(org.toString())
 		else org = await prisma.oRG.findUnique({ where: { email } })
@@ -34,10 +30,8 @@ export class PrismaOrgsRepository implements OrgsRepository {
 	async create(data: Prisma.ORGCreateInput) {
 		const org = await prisma.oRG.create({ data })
 
-		const clientRedis = await redis.connect()
-		await clientRedis.set(`org-${org.id}`, JSON.stringify(org))
-		await clientRedis.set(`org-${org.email}`, JSON.stringify(org))
-		await clientRedis.disconnect()
+		await cacheProvider.set(`org-${org.id}`, JSON.stringify(org))
+		await cacheProvider.set(`org-${org.email}`, JSON.stringify(org))
 
 		return org
 	}
@@ -51,10 +45,8 @@ export class PrismaOrgsRepository implements OrgsRepository {
 			data: { name, email, password_hash, address, locale, phone, role },
 		})
 
-		const clientRedis = await redis.connect()
-		await clientRedis.set(`org-${org.id}`, '')
-		await clientRedis.set(`org-${org.email}`, '')
-		await clientRedis.disconnect()
+		await cacheProvider.set(`org-${org.id}`, '')
+		await cacheProvider.set(`org-${org.email}`, '')
 
 		return org
 	}

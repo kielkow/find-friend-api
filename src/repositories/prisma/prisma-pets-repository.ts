@@ -1,6 +1,6 @@
-import { redis } from '@/lib/redis'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import { cacheProvider } from '@/lib/cache'
 
 import { ListQuery, PetUpdate, PetsRepository } from '../pets-repository'
 
@@ -24,9 +24,7 @@ export class PrismaPetsRepository implements PetsRepository {
 	async findById(id: string) {
 		let pet
 
-		const clientRedis = await redis.connect()
-		pet = await clientRedis.get(`pet-${id}`)
-		await clientRedis.disconnect()
+		pet = await cacheProvider.get(`pet-${id}`)
 
 		if (pet) pet = JSON.parse(pet.toString())
 		else pet = await prisma.pet.findUnique({ where: { id } })
@@ -37,9 +35,7 @@ export class PrismaPetsRepository implements PetsRepository {
 	async create(data: Prisma.PetUncheckedCreateInput) {
 		const pet = await prisma.pet.create({ data })
 
-		const clientRedis = await redis.connect()
-		await clientRedis.set(`pet-${pet.id}`, JSON.stringify(pet))
-		await clientRedis.disconnect()
+		await cacheProvider.set(`pet-${pet.id}`, JSON.stringify(pet))
 
 		return pet
 	}
@@ -52,9 +48,7 @@ export class PrismaPetsRepository implements PetsRepository {
 			data: { name, race, size, age, locale, org_id },
 		})
 
-		const clientRedis = await redis.connect()
-		await clientRedis.set(`pet-${pet.id}`, '')
-		await clientRedis.disconnect()
+		await cacheProvider.set(`pet-${pet.id}`, '')
 
 		return pet
 	}
