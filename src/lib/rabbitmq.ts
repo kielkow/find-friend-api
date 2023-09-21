@@ -35,7 +35,15 @@ class RabbitMQClient {
 
 	async testConn() {
 		try {
-			console.info('test connection with rabbitmq')
+			const connection = await amqplib.connect(env.RABBIT_URL)
+
+			const channel = await connection.createChannel()
+			await channel.assertQueue('test-conn')
+
+			channel.close()
+			connection.close()
+
+			console.info('Test connection with Rabbit success.')
 		} catch (error) {
 			console.error({
 				status: 'Test connection with Rabbit fail.',
