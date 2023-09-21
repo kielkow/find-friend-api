@@ -43,7 +43,10 @@ class RabbitMQClient {
 			channel.close()
 			connection.close()
 
-			console.info('Test connection with Rabbit success.')
+			console.info({
+				status: 'Test connection with RabbitMQ success.',
+				result: true,
+			})
 		} catch (error) {
 			console.error({
 				status: 'Test connection with Rabbit fail.',
