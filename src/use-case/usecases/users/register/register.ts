@@ -17,11 +17,16 @@ interface RegisterUseCaseResponse {
 export class RegisterUseCase {
 	constructor(private usersRepository: UsersRepository) {}
 
-	async execute({
-		name,
-		email,
-		password,
-	}: RegisterUseCaseRequest): Promise<RegisterUseCaseResponse> {
+	async execute(
+		data: RegisterUseCaseRequest | string,
+	): Promise<RegisterUseCaseResponse> {
+		let payload: RegisterUseCaseRequest
+
+		if (typeof data === 'string') payload = JSON.parse(data)
+		else payload = data
+
+		const { name, email, password } = payload
+
 		const userExists = await this.usersRepository.findByEmail(email)
 
 		if (userExists) throw new UserAlreadyExistsError()
