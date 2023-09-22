@@ -4,6 +4,12 @@ import amqplib from 'amqplib'
 class RabbitMQClient {
 	constructor() {}
 
+	async connect() {
+		const connection = await amqplib.connect(env.RABBIT_URL)
+
+		return connection
+	}
+
 	async publish(queue: string, message: string) {
 		const connection = await amqplib.connect(env.RABBIT_URL)
 
