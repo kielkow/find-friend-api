@@ -5,26 +5,34 @@ import { cacheProvider } from '@/lib/cache'
 import { UserUpdate, UsersRepository } from '../users-repository'
 
 export class PrismaUsersRepository implements UsersRepository {
-	// TODO: If user does not exists at cache, set it.
 	async findById(id: string) {
 		let user
 
 		user = await cacheProvider.get(`user-${id}`)
 
-		if (user) user = JSON.parse(user.toString())
-		else user = await prisma.user.findUnique({ where: { id } })
+		if (user) {
+			user = JSON.parse(user.toString())
+		} else {
+			user = await prisma.user.findUnique({ where: { id } })
+
+			if (user) await cacheProvider.set(`user-${id}`, JSON.stringify(user))
+		}
 
 		return user
 	}
 
-	// TODO: If user does not exists at cache, set it.
 	async findByEmail(email: string) {
 		let user
 
 		user = await cacheProvider.get(`user-${email}`)
 
-		if (user) user = JSON.parse(user.toString())
-		else user = await prisma.user.findUnique({ where: { email } })
+		if (user) {
+			user = JSON.parse(user.toString())
+		} else {
+			user = await prisma.user.findUnique({ where: { email } })
+
+			if (user) await cacheProvider.set(`user-${email}`, JSON.stringify(user))
+		}
 
 		return user
 	}

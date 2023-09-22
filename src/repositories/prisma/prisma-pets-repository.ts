@@ -21,14 +21,18 @@ export class PrismaPetsRepository implements PetsRepository {
 		return pets
 	}
 
-	// TODO: If pet does not exists at cache, set it.
 	async findById(id: string) {
 		let pet
 
 		pet = await cacheProvider.get(`pet-${id}`)
 
-		if (pet) pet = JSON.parse(pet.toString())
-		else pet = await prisma.pet.findUnique({ where: { id } })
+		if (pet) {
+			pet = JSON.parse(pet.toString())
+		} else {
+			pet = await prisma.pet.findUnique({ where: { id } })
+
+			if (pet) await cacheProvider.set(`pet-${id}`, JSON.stringify(pet))
+		}
 
 		return pet
 	}

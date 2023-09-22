@@ -5,26 +5,34 @@ import { cacheProvider } from '@/lib/cache'
 import { OrgUpdate, OrgsRepository } from '../orgs-repository'
 
 export class PrismaOrgsRepository implements OrgsRepository {
-	// TODO: If org does not exists at cache, set it.
 	async findById(id: string) {
 		let org
 
 		org = await cacheProvider.get(`org-${id}`)
 
-		if (org) org = JSON.parse(org.toString())
-		else org = await prisma.oRG.findUnique({ where: { id } })
+		if (org) {
+			org = JSON.parse(org.toString())
+		} else {
+			org = await prisma.oRG.findUnique({ where: { id } })
+
+			if (org) await cacheProvider.set(`org-${id}`, JSON.stringify(org))
+		}
 
 		return org
 	}
 
-	// TODO: If org does not exists at cache, set it.
 	async findByEmail(email: string) {
 		let org
 
 		org = await cacheProvider.get(`org-${email}`)
 
-		if (org) org = JSON.parse(org.toString())
-		else org = await prisma.oRG.findUnique({ where: { email } })
+		if (org) {
+			org = JSON.parse(org.toString())
+		} else {
+			org = await prisma.oRG.findUnique({ where: { email } })
+
+			if (org) await cacheProvider.set(`org-${email}`, JSON.stringify(org))
+		}
 
 		return org
 	}
