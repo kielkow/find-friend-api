@@ -1,6 +1,6 @@
-import { cacheProvider } from '@/lib/cache'
-import { messageProvider } from '@/lib/message'
-import { testConn as prismaTestConn } from '@/lib/prisma'
+import { cacheProvider } from '@/providers/cache'
+import { messageProvider } from '@/providers/message'
+import { testConn as prismaTestConn } from '@/providers/prisma'
 
 interface HealthcheckUseCaseResponse {
 	message: string

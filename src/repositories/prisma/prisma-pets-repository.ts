@@ -1,6 +1,7 @@
-import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
-import { cacheProvider } from '@/lib/cache'
+
+import { prisma } from '@/providers/prisma'
+import { cacheProvider } from '@/providers/cache'
 
 import { ListQuery, PetUpdate, PetsRepository } from '../pets-repository'
 

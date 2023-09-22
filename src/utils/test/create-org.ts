@@ -1,6 +1,7 @@
-import { FastifyInstance } from 'fastify'
-import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
+import { FastifyInstance } from 'fastify'
+
+import { prisma } from '@/providers/prisma'
 
 export async function createOrg(app: FastifyInstance) {
 	const org = await prisma.oRG.create({
