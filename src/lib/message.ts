@@ -1,7 +1,7 @@
 import { env } from '@/env'
 import amqplib from 'amqplib'
 
-class RabbitMQClient {
+class MessageProvider {
 	constructor() {}
 
 	async connect() {
@@ -64,4 +64,4 @@ class RabbitMQClient {
 	}
 }
 
-export const rabbitmq = new RabbitMQClient()
+export const messageProvider = new MessageProvider()
