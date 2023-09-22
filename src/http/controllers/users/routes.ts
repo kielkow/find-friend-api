@@ -7,6 +7,7 @@ import { refresh } from './refresh/refresh'
 import { update } from './update/update'
 
 import { verifyJWT } from '../../middlewares/verify-jwt'
+import { consumeMessages } from './consume-messages/consume-messages'
 
 export async function usersRoutes(app: FastifyInstance) {
 	// Not Authenticated
@@ -17,6 +18,12 @@ export async function usersRoutes(app: FastifyInstance) {
 
 	// Authenticated
 	app.get('/me', { onRequest: [verifyJWT] }, profile)
+
+	app.post(
+		'/users/consume-messages',
+		{ onRequest: [verifyJWT] },
+		consumeMessages,
+	)
 
 	app.put('/users/:id', { onRequest: [verifyJWT] }, update)
 }

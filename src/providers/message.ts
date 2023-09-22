@@ -29,9 +29,13 @@ class MessageProvider {
 		await channel.assertQueue(queue)
 
 		await channel.consume(queue, async (msg) => {
-			if (msg !== null) {
-				await method(msg.content.toString())
-				channel.ack(msg)
+			try {
+				if (msg !== null) {
+					await method(msg.content.toString())
+					channel.ack(msg)
+				}
+			} catch (error) {
+				console.error('Error processing message:', error)
 			}
 		})
 
