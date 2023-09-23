@@ -51,10 +51,10 @@ services:
     networks:
       - app-network
     environment:
-      - RABBITMQ_VHOST=find-friend-api
+      - RABBITMQ_VHOST=findfriendapi
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
-      - RABBITMQ_ERL_COOKIE=find-friend-api
+      - RABBITMQ_ERL_COOKIE=findfriendapi
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/data
     healthcheck:
