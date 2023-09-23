@@ -33,4 +33,4 @@ Find a friend API.
 - [X] Desenvolver rota para healthcheck da aplicação e dos demais serviços;
 - [X] Mock de cache para testes;
 - [X] Todos os logs de erro da aplicação devem ser salvos no Sentry;
-- [ ] Deve ser possível consumir mensagens em uma fila para processar dados;
+- [ ] Deve ser possível publicar e consumir mensagens em uma fila para processar dados;
