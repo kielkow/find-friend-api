@@ -86,6 +86,9 @@ services:
       - NODE_ENV=${NODE_ENV}
       - HOST=${HOST}
       - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - SENTRY_DSN_URL=${SENTRY_DSN_URL}
     restart: always
 
 networks:
