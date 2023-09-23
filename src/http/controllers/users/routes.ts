@@ -5,9 +5,10 @@ import { authenticate } from './authenticate/authenticate'
 import { profile } from './profile/profile'
 import { refresh } from './refresh/refresh'
 import { update } from './update/update'
+import { consumeMessages } from './consume-messages/consume-messages'
+import { publishMessage } from './publish-message/publish-message'
 
 import { verifyJWT } from '../../middlewares/verify-jwt'
-import { consumeMessages } from './consume-messages/consume-messages'
 
 export async function usersRoutes(app: FastifyInstance) {
 	// Not Authenticated
@@ -18,6 +19,8 @@ export async function usersRoutes(app: FastifyInstance) {
 
 	// Authenticated
 	app.get('/me', { onRequest: [verifyJWT] }, profile)
+
+	app.post('/users/publish-message', { onRequest: [verifyJWT] }, publishMessage)
 
 	app.post(
 		'/users/consume-messages',
