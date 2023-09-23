@@ -46,17 +46,19 @@ services:
     container_name: rabbitmq
     hostname: rabbitmq
     ports:
-      - 5672:5672
       - 15672:15672
+      - 5672:5672
     networks:
       - app-network
     environment:
+      - RABBITMQ_VHOST=find-friend-api
       - RABBITMQ_USERNAME=${RABBITMQ_USERNAME}
       - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - RABBITMQ_ERL_COOKIE=find-friend-api
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/data
     healthcheck:
-      test: ["CMD-SHELL", "rabbitmqctl", "cluster_status"]
+      test: ["CMD", "rabbitmqctl", "cluster_status"]
       interval: 15s
       timeout: 5s
       retries: 3
@@ -70,6 +72,10 @@ services:
     container_name: find-friend-api
     depends_on:
       postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     ports:
       - 3333:3333
