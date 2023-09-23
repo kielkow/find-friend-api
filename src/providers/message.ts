@@ -5,13 +5,13 @@ class MessageProvider {
 	constructor() {}
 
 	async connect() {
-		const connection = await amqplib.connect(env.RABBIT_URL)
+		const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 		return connection
 	}
 
 	async publish(queue: string, message: string) {
-		const connection = await amqplib.connect(env.RABBIT_URL)
+		const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 		const channel = await connection.createChannel()
 		await channel.assertQueue(queue)
@@ -23,7 +23,7 @@ class MessageProvider {
 	}
 
 	async consume(queue: string, method: Function) {
-		const connection = await amqplib.connect(env.RABBIT_URL)
+		const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 		const channel = await connection.createChannel()
 		await channel.assertQueue(queue)
@@ -45,7 +45,7 @@ class MessageProvider {
 
 	async testConn() {
 		try {
-			const connection = await amqplib.connect(env.RABBIT_URL)
+			const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 			const channel = await connection.createChannel()
 			await channel.assertQueue('test-conn')
