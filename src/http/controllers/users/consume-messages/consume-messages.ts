@@ -1,15 +1,13 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 
 import { messageProvider } from '@/providers/message-broker'
-import { makeRegisterUsecase } from '@/use-case/factories/users/make-register-usecase'
+import { consumeMessage } from '@/use-case/usecases/users/consume-message/consume-message'
 
 export async function consumeMessages(
 	request: FastifyRequest,
 	reply: FastifyReply,
 ) {
-	const registerUseCase = makeRegisterUsecase()
-
-	await messageProvider.consume('create-users', registerUseCase.execute)
+	await messageProvider.consume('create-users', consumeMessage)
 
 	return reply.status(200).send({ message: 'Messages consumed.' })
 }
