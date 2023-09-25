@@ -58,9 +58,9 @@ class MessageProvider {
 
 			const channel = await this.connection.createChannel()
 
-			channel.assertQueue('test-conn')
+			await channel.assertQueue('test-conn')
 
-			channel.close()
+			await channel.close()
 
 			console.info({
 				status: 'Test connection with RabbitMQ success.',
