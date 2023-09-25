@@ -18,29 +18,35 @@ class MessageProvider {
 
 		channel.sendToQueue(queue, Buffer.from(message))
 
-		channel.close()
-		connection.close()
+		await channel.close()
+		await connection.close()
 	}
 
 	async consume(queue: string, method: Function) {
 		const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 		const channel = await connection.createChannel()
-		await channel.assertQueue(queue)
+		const q = await channel.assertQueue(queue)
+		console.log('QUEUE INFO:', { name: q.queue, messageCount: q.messageCount })
 
-		await channel.consume(queue, async (msg) => {
-			try {
-				if (msg !== null) {
-					await method(msg.content.toString())
-					channel.ack(msg)
+		await channel.consume(
+			queue,
+			async (msg) => {
+				try {
+					if (msg !== null) {
+						// await method(msg.content.toString())
+						console.info(msg.content.toString())
+						channel.ack(msg)
+					}
+				} catch (error) {
+					console.error('Error processing message:', error)
 				}
-			} catch (error) {
-				console.error('Error processing message:', error)
-			}
-		})
+			},
+			{ noAck: false, consumerTag: 'create-users' },
+		)
 
-		channel.close()
-		connection.close()
+		await channel.close()
+		await connection.close()
 	}
 
 	async testConn() {
@@ -50,8 +56,8 @@ class MessageProvider {
 			const channel = await connection.createChannel()
 			await channel.assertQueue('test-conn')
 
-			channel.close()
-			connection.close()
+			await channel.close()
+			await connection.close()
 
 			console.info({
 				status: 'Test connection with RabbitMQ success.',
