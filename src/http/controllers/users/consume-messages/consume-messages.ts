@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 
-import { messageProvider } from '@/providers/message'
+import { messageProvider } from '@/providers/message-broker'
 import { makeRegisterUsecase } from '@/use-case/factories/users/make-register-usecase'
 
 export async function consumeMessages(

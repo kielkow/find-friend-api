@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
-import { messageProvider } from '@/providers/message'
+import { messageProvider } from '@/providers/message-broker'
 
 export async function publishMessage(
 	request: FastifyRequest,

@@ -1,5 +1,5 @@
 import { cacheProvider } from '@/providers/cache'
-import { messageProvider } from '@/providers/message'
+import { messageProvider } from '@/providers/message-broker'
 import { testConn as prismaTestConn } from '@/providers/prisma'
 
 interface HealthcheckUseCaseResponse {
