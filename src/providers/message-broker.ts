@@ -1,31 +1,34 @@
 import { env } from '@/env'
-import amqplib from 'amqplib'
+import amqplib, { Connection } from 'amqplib'
 
 class MessageProvider {
-	constructor() {}
+	connection: Connection | null
+
+	constructor() {
+		this.connection = null
+	}
 
 	async connect() {
-		const connection = await amqplib.connect(env.RABBITMQ_URL)
-
-		return connection
+		return await amqplib.connect(env.RABBITMQ_URL)
 	}
 
 	async publish(queue: string, message: string) {
-		const connection = await amqplib.connect(env.RABBITMQ_URL)
+		if (!this.connection) this.connection = await this.connect()
 
-		const channel = await connection.createChannel()
+		const channel = await this.connection.createChannel()
+
 		await channel.assertQueue(queue, { durable: true })
 
 		channel.sendToQueue(queue, Buffer.from(message))
 
 		await channel.close()
-		await connection.close()
 	}
 
 	async consume(queue: string, method: Function) {
-		const connection = await amqplib.connect(env.RABBITMQ_URL)
+		if (!this.connection) this.connection = await this.connect()
 
-		const channel = await connection.createChannel()
+		const channel = await this.connection.createChannel()
+
 		const { queue: name, messageCount } = await channel.assertQueue(queue, {
 			durable: true,
 		})
@@ -36,30 +39,28 @@ class MessageProvider {
 			async (msg) => {
 				if (msg) {
 					try {
-						await method(msg.content.toString())
+						method(msg.content.toString())
 						channel.ack(msg)
 					} catch (error) {
-						console.error('Error processing message:', error)
 						channel.reject(msg, false)
 					}
 				}
 			},
-			{ noAck: false, consumerTag: 'create-users' },
+			{ noAck: false },
 		)
 
 		await channel.close()
-		await connection.close()
 	}
 
 	async testConn() {
 		try {
-			const connection = await amqplib.connect(env.RABBITMQ_URL)
+			if (!this.connection) this.connection = await this.connect()
 
-			const channel = await connection.createChannel()
-			await channel.assertQueue('test-conn')
+			const channel = await this.connection.createChannel()
 
-			await channel.close()
-			await connection.close()
+			channel.assertQueue('test-conn')
+
+			channel.close()
 
 			console.info({
 				status: 'Test connection with RabbitMQ success.',
