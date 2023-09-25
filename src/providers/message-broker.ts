@@ -14,7 +14,7 @@ class MessageProvider {
 		const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 		const channel = await connection.createChannel()
-		await channel.assertQueue(queue)
+		await channel.assertQueue(queue, { durable: true })
 
 		channel.sendToQueue(queue, Buffer.from(message))
 
@@ -26,20 +26,22 @@ class MessageProvider {
 		const connection = await amqplib.connect(env.RABBITMQ_URL)
 
 		const channel = await connection.createChannel()
-		const q = await channel.assertQueue(queue)
-		console.log('QUEUE INFO:', { name: q.queue, messageCount: q.messageCount })
+		const { queue: name, messageCount } = await channel.assertQueue(queue, {
+			durable: true,
+		})
+		console.log('QUEUE INFO:', { name, messageCount })
 
 		await channel.consume(
 			queue,
 			async (msg) => {
-				try {
-					if (msg !== null) {
-						// await method(msg.content.toString())
-						console.info(msg.content.toString())
+				if (msg) {
+					try {
+						await method(msg.content.toString())
 						channel.ack(msg)
+					} catch (error) {
+						console.error('Error processing message:', error)
+						channel.reject(msg, false)
 					}
-				} catch (error) {
-					console.error('Error processing message:', error)
 				}
 			},
 			{ noAck: false, consumerTag: 'create-users' },
