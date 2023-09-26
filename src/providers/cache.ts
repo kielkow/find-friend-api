@@ -3,7 +3,11 @@ import redisMock from 'redis-mock'
 import { createClient } from 'redis'
 
 class CacheProvider {
-	constructor() {}
+	client: any
+
+	constructor() {
+		this.client = null
+	}
 
 	async connect() {
 		if (process.env.NODE_ENV === 'test') {
@@ -25,37 +29,27 @@ class CacheProvider {
 	}
 
 	async set(key: string, value: string) {
-		const client = await this.connect()
-		await client.set(key, value)
-		await client.disconnect()
+		if (!this.client) this.client = await this.connect()
+		await this.client.set(key, value)
 	}
 
 	async get(key: string) {
-		const client = await this.connect()
-		const value = await client.get(key)
-		await client.disconnect()
+		if (!this.client) this.client = await this.connect()
+		const value = await this.client.get(key)
 		return value
 	}
 
 	async testConn() {
 		try {
-			const client = createClient({ url: env.REDIS_URL })
+			if (!this.client) this.client = await this.connect()
 
-			client.on('error', (error) => {
-				throw error
-			})
+			await this.client.setEx('test-connection', 60, '1')
 
-			await client.connect()
-
-			await client.setEx('test-connection', 60, '1')
-
-			const result = await client.get('test-connection')
+			const result = await this.client.get('test-connection')
 			console.info({
 				status: 'Test connection with Redis success.',
 				result,
 			})
-
-			await client.disconnect()
 		} catch (error) {
 			console.error({
 				status: 'Test connection with Redis fail.',
